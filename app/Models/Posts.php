@@ -42,4 +42,9 @@ class Posts extends Model
         }
     }
 
+    // RELACION CON COMENTARIOS
+    public function comentarios(){
+        return $this->hasMany(Comentarios::class, 'post_id');
+    }
+
 }

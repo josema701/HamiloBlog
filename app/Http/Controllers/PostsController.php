@@ -42,7 +42,7 @@ class PostsController extends Controller
             'imagen' => 'required|image|mimes:png,jpg,jpeg',
             'resumen' => 'required|string|min:5|max:350',
             'contenido' => 'required|string|min:5',
-            'estado' => 'required',
+            'estado' => 'nullable',
             'tags' => 'nullable',
             'fecha_publicacion' => 'required'
         ]);
@@ -65,7 +65,7 @@ class PostsController extends Controller
         $post->resumen = $request->resumen;
         $post->contenido = $request->contenido;
         $post->estado = ($request->estado == 'on') ? true : false;
-        $post->tags = $request->tags;
+        $post->tags = json_encode($request->tags);
         $post->fecha_publicacion = $request->fecha_publicacion;
         $post->usuario_id = auth()->user()->id;
         if ($post->save()) {
@@ -78,32 +78,90 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Posts $posts)
+    public function show($id)
     {
-        //
+        $post = Posts::with('usuario', 'categoria', 'comentarios', 'comentarios.usuario')->find($id);
+        return view('posts.show', compact('post'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Posts $posts)
+    public function edit($id)
     {
-        //
+        $post = Posts::find($id);
+
+        // dd($post);
+
+        $categorias = Categorias::where('estado', true)->get();
+        $tags = Tags::where('estado', true)->get();
+
+        return view('posts.edit', compact('post', 'categorias', 'tags'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Posts $posts)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'categoria_id' => 'required|exists:categorias,id',
+            'titulo' => 'required|string|min:10|max:200',
+            'imagen' => 'nullable|image|mimes:png,jpg,jpeg',
+            'resumen' => 'required|string|min:5|max:350',
+            'contenido' => 'required|string|min:5',
+            'estado' => 'nullable',
+            'tags' => 'nullable',
+            'fecha_publicacion' => 'required'
+        ]);
+
+        $post = Posts::find($id);
+
+        if($request->file('imagen')){
+            // eliminar la imagen anterior
+            if($post->imagen != 'default.png'){
+                if(file_exists(public_path().'/imagenes/posts/'.$post->imagen)){
+                    unlink(public_path().'/imagenes/posts/'.$post->imagen);
+                }
+            }
+
+            $imagen = $request->file('imagen');
+            $nombreImagen = uniqid('post_') . '.png';
+            if(!is_dir(public_path('/imagenes/posts/'))){
+                File::makeDirectory(public_path().'/imagenes/posts/',0777,true);
+            }
+            $subido = $imagen->move(public_path().'/imagenes/posts/', $nombreImagen);
+
+            $post->imagen = $nombreImagen;
+        }
+
+        $post->categoria_id = $request->categoria_id;
+        $post->titulo = $request->titulo;
+
+        $post->resumen = $request->resumen;
+        $post->contenido = $request->contenido;
+        $post->estado = ($request->estado == 'on') ? true : false;
+        $post->tags = json_encode($request->tags);
+        $post->fecha_publicacion = $request->fecha_publicacion;
+        $post->usuario_id = auth()->user()->id;
+        if ($post->save()) {
+            return redirect('/posts')->with('success', 'Registro actualizado correctamente!');
+        } else {
+            return back()->with('error', 'El registro no fué actualizado!');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Posts $posts)
+    public function estado($id)
     {
-        //
+        $post = Posts::find($id);
+        $post->estado = !$post->estado;
+        if ($post->save()) {
+            return redirect('/posts')->with('success', 'Estado actualizado correctamente!');
+        } else {
+            return back()->with('error', 'El estado no fué actualizado!');
+        }
     }
 }

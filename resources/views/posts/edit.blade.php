@@ -20,7 +20,8 @@
 
 
 <div class="content">
-    <form action="{{ url('/posts/registrar') }}" method="POST" enctype="multipart/form-data" >
+    <form action="{{ url('/posts/actualizar/' . $post->id) }}" method="POST" enctype="multipart/form-data" >
+        @method('PUT')
         @csrf
         <div class="container-fluid">
             @include('includes.alertas')
@@ -28,15 +29,20 @@
                 <div class="col-md-5">
                     <div class="card m-1">
                         <div class="card-body">
+
+                            <div class="text-center">
+                                <img src="{{ $post->getImagenUrl() }}" alt="" height="60px">
+                            </div>
+
                             <div class="form-group">
                                 <label for="imagen">Imagen</label>
-                                <input type="file" name="imagen" value="{{ old('imagen') }}" class="form-control">
+                                <input type="file" name="imagen" class="form-control">
                                 @error('imagen') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="titulo">Titulo</label>
-                                <input type="text" name="titulo" value="{{ old('titulo') }}" class="form-control">
+                                <input type="text" name="titulo" value="{{ $post->titulo }}" class="form-control">
                                 @error('titulo') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
                         </div>
@@ -49,17 +55,17 @@
                                 <select name="categoria_id" id="categoria_id" class="form-control">
                                     <option value="">Seleccione...</option>
                                     @foreach ($categorias as $cate)
-                                        <option value="{{ $cate->id }}" @if($cate->id == old('categoria_id')) selected @endif>{{ $cate->nombre }}</option>
+                                        <option value="{{ $cate->id }}" @if($cate->id == $post->categoria_id) selected @endif>{{ $cate->nombre }}</option>
                                     @endforeach
                                 </select>
                                 @error('categoria_id') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
                             <div class="form-group">
                                 <label for="tags">#Tags</label>
-                                <select name="tags[]" id="tags" class="form-control" multiple>
+                                <select name="tags" id="tags" class="form-control" multiple>
                                     <option value="">Seleccione...</option>
                                     @foreach ($tags as $ta)
-                                        <option value="{{ $ta->nombre }}" @if(old('tags') && in_array($ta->nombre, old('tags'))) selected @endif >{{ $ta->nombre }}</option>
+                                        <option value="{{ $ta->nombre }}" @if(in_array($ta->nombre, json_decode($post->tags))) selected @endif >{{ $ta->nombre }}</option>
                                     @endforeach
                                 </select>
                                 @error('tags') <small class="text-danger">{{ $message }}</small> @enderror
@@ -71,7 +77,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="fecha_publicacion">Fecha publicación</label>
-                                <input type="datetime-local" name="fecha_publicacion" value="{{ old('fecha_publicacion') }}" class="form-control">
+                                <input type="datetime-local" name="fecha_publicacion" value="{{ $post->fecha_publicacion }}" class="form-control">
                                 @error('fecha_publicacion') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
                             <div class="form-group mt-4">
@@ -94,7 +100,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="resumen">Resumen del post</label>
-                                <textarea name="resumen" id="resumen" cols="30" rows="3" class="form-control">{{ old('resumen') }}</textarea>
+                                <textarea name="resumen" id="resumen" cols="30" rows="3" class="form-control">{{ $post->resumen }}</textarea>
                                 @error('resumen') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
                         </div>
@@ -104,7 +110,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="contenido">Contenido del post</label>
-                                <textarea name="contenido" id="contenido" cols="30" rows="15" class="form-control">{{ old('contenido') }}</textarea>
+                                <textarea name="contenido" id="contenido" cols="30" rows="15" class="form-control">{{ $post->contenido }}</textarea>
                                 @error('contenido') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
                         </div>
