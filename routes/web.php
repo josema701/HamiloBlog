@@ -37,3 +37,8 @@ Route::post('/tags/registrar', [App\Http\Controllers\TagsController::class, 'sto
 Route::get('/tags/actualizar/{id}', [App\Http\Controllers\TagsController::class, 'edit']);
 Route::put('/tags/actualizar/{id}', [App\Http\Controllers\TagsController::class, 'update']);
 Route::get('/tags/estado/{id}', [App\Http\Controllers\TagsController::class, 'estado']);
+
+// PARA POSTS
+Route::get('/posts', [App\Http\Controllers\PostsController::class, 'index']);
+Route::get('/posts/registrar', [App\Http\Controllers\PostsController::class, 'create']);
+Route::post('/posts/registrar', [App\Http\Controllers\PostsController::class, 'store']);

@@ -134,10 +134,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ url('/posts') }}" class="nav-link {{ (request()->is('posts*')) ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-list"></i>
                                     <p>
-                                        Blogs
+                                        Posts
                                         <span class="right badge badge-danger">New</span>
                                     </p>
                                 </a>
