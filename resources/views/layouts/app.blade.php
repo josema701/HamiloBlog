@@ -118,7 +118,7 @@
                                 </ul>
                             </li> --}}
                             <li class="nav-item">
-                                <a href="{{ url('/categorias') }}" class="nav-link">
+                                <a href="{{ url('/categorias') }}" class="nav-link {{ (request()->is('categorias*')) ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-th"></i>
                                     <p>
                                         Categorías
@@ -126,7 +126,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ url('/tags') }}" class="nav-link {{ (request()->is('tags*')) ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-hashtag"></i>
                                     <p>
                                         Tags

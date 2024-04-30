@@ -29,3 +29,11 @@ Route::post('/categorias/registrar', [App\Http\Controllers\CategoriasController:
 Route::get('/categorias/actualizar/{id}', [App\Http\Controllers\CategoriasController::class, 'edit']);
 Route::put('/categorias/actualizar/{id}', [App\Http\Controllers\CategoriasController::class, 'update']);
 Route::get('/categorias/estado/{id}', [App\Http\Controllers\CategoriasController::class, 'estado']);
+
+// PARA TAGS
+Route::get('/tags', [App\Http\Controllers\TagsController::class, 'index']);
+Route::get('/tags/registrar', [App\Http\Controllers\TagsController::class, 'create']);
+Route::post('/tags/registrar', [App\Http\Controllers\TagsController::class, 'store']);
+Route::get('/tags/actualizar/{id}', [App\Http\Controllers\TagsController::class, 'edit']);
+Route::put('/tags/actualizar/{id}', [App\Http\Controllers\TagsController::class, 'update']);
+Route::get('/tags/estado/{id}', [App\Http\Controllers\TagsController::class, 'estado']);
