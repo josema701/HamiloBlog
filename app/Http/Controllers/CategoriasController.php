@@ -103,10 +103,10 @@ class CategoriasController extends Controller
                 File::makeDirectory(public_path().'/imagenes/categorias/',0777,true);
             }
             $subido = $imagen->move(public_path().'/imagenes/categorias/', $nombreImagen);
+            $categoria->imagen = $nombreImagen;
         }
 
         $categoria->nombre = $request->nombre;
-        $categoria->imagen = $nombreImagen;
         $categoria->estado = true;
         $categoria->usuario_id = auth()->user()->id;
         if ($categoria->save()) {

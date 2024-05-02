@@ -56,6 +56,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('/comentarios/actualizar/{id}', [App\Http\Controllers\ComentariosController::class, 'update']);
     Route::get('/comentarios/estado/{id}', [App\Http\Controllers\ComentariosController::class, 'estado']);
 
-
+    // PARA USUARIOS
+    Route::get('/usuarios', [App\Http\Controllers\UsuariosController::class, 'index']);
 });
 

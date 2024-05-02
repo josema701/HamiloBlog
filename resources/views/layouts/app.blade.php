@@ -159,10 +159,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ url('/usuarios') }}" class="nav-link {{ (request()->is('usuarios*')) ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>
-                                        Usarios
+                                        Usuarios
                                     </p>
                                 </a>
                             </li>
