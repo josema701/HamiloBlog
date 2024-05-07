@@ -33,4 +33,9 @@ class Categorias extends Model
         return $this->belongsTo(User::class, 'usuario_id');
     }
 
+    // RELACION CON POSTS
+    public function posts(){
+        return $this->hasMany(Posts::class, 'categoria_id');
+    }
+
 }

@@ -83,6 +83,9 @@
                                             <a href="{{ url('/posts/estado/' . $item->id) }}" class="btn btn-primary btn-sm">
                                                 <i class="fas fa-check"></i>
                                             </a>
+                                            <a href="{{ url('/posts/eliminar/' . $item->id) }}" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
                                         @endif
                                         <a href="{{ url('/comentarios/registrar/' . $item->id) }}" class="btn btn-success btn-sm">
                                             <i class="fas fa-comments"></i>

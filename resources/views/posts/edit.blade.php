@@ -62,7 +62,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="tags">#Tags</label>
-                                <select name="tags" id="tags" class="form-control" multiple>
+                                <select name="tags[]" id="tags" class="form-control" multiple>
                                     <option value="">Seleccione...</option>
                                     @foreach ($tags as $ta)
                                         <option value="{{ $ta->nombre }}" @if(in_array($ta->nombre, json_decode($post->tags))) selected @endif >{{ $ta->nombre }}</option>

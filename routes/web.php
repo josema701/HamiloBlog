@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/posts/actualizar/{id}', [App\Http\Controllers\PostsController::class, 'edit']);
     Route::put('/posts/actualizar/{id}', [App\Http\Controllers\PostsController::class, 'update']);
     Route::get('/posts/estado/{id}', [App\Http\Controllers\PostsController::class, 'estado']);
+    Route::get('/posts/eliminar/{id}', [App\Http\Controllers\PostsController::class, 'destroy']);
 
     // PARA COMENTARIOS
     Route::get('/comentarios', [App\Http\Controllers\ComentariosController::class, 'index']);
