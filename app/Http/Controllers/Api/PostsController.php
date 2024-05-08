@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Posts;
+use Twilio\Rest\Client;
+use App\Models\Contactos;
 use App\Models\Categorias;
 use App\Models\Comentarios;
 use Illuminate\Http\Request;
@@ -134,6 +136,101 @@ class PostsController extends Controller
         return response()->json([
             'mensaje' => 'Datos cargados.',
             'datos' => $categorias,
+        ]);
+    }
+
+    public function comentario(Request $request){
+        $this->validate($request, [
+            'post_id' => 'required|exists:posts,id',
+            'comentario' => 'required|string|min:10|max:200'
+        ]);
+
+        $comment = new Comentarios();
+        $comment->post_id = $request->post_id;
+        $comment->comentario = $request->comentario;
+        $comment->estado = true;
+        $comment->fecha = now();
+        $comment->usuario_id = auth()->user()->id;
+        if ($comment->save()) {
+            return response()->json([
+                'mensaje' => 'Registro agregado correctamente!',
+                'datos' => $comment,
+            ]);
+        } else {
+            return response()->json([
+                'mensaje' => 'El registro no fué agregado!'
+            ]);
+        }
+    }
+
+    public function contacto(Request $request){
+        $this->validate($request, [
+            'nombre' => 'required|string|min:2|max:200',
+            'correo' => 'required|email',
+            'asunto' => 'required|string|min:5|max:200',
+            'mensaje' => 'required|string|min:10|max:500',
+            'telefono' => 'required|numeric|digits_between:6,8'
+        ]);
+
+        $contacto = new Contactos();
+        $contacto->nombre = $request->nombre;
+        $contacto->correo = $request->correo;
+        $contacto->asunto = $request->asunto;
+        $contacto->mensaje = $request->mensaje;
+        $contacto->telefono = $request->telefono;
+        if ($contacto->save()) {
+
+            // verificacion de telefono o celular
+            if(strlen($contacto->telefono) == 8){
+                $twiliosid = env('TWILIO_SID');
+                $twiliotoken = env('TWILIO_TOKEN');
+                $twiliodesde = env('TWILIO_FROM');
+
+                $clienteTwilio = new Client($twiliosid, $twiliotoken);
+
+                $numeroCliente = '+591'.$contacto->telefono;
+                $mensajeTwilio = 'Gracias por ponerse en contacto, le reposnderemos a la brevedad posible.';
+
+                $clienteTwilio->messages->create(
+                    $numeroCliente, [
+                        'from' => $twiliodesde,
+                        'body' => $mensajeTwilio
+                    ]
+                );
+            }
+
+            return response()->json([
+                'mensaje' => 'Registro agregado correctamente!',
+                'datos' => $contacto,
+            ]);
+        } else {
+            return response()->json([
+                'mensaje' => 'El registro no fué agregado!'
+            ]);
+        }
+    }
+
+
+    // ENVIAR EL SMS
+    public function enviarSMS($numero){
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_TOKEN');
+        $desde = env('TWILIO_FROM');
+
+        $a = '+591'.$numero;
+        $mensaje = "Hola, gracias por contactarte con nosotros. Te responderemos a la brevedad posible.";
+
+        $clienteTwilio = new Client($sid, $token);
+        $mensajeEnviado = $clienteTwilio->messages->create(
+            $a, [
+                'from' => $desde,
+                'body' => $mensaje
+            ]
+        );
+
+        return response()->json([
+            'mensaje' => 'Mensaje enviado!',
+            'datos' => $mensajeEnviado,
         ]);
     }
 }

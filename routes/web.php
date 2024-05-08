@@ -59,5 +59,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     // PARA USUARIOS
     Route::get('/usuarios', [App\Http\Controllers\UsuariosController::class, 'index']);
+
+    // PARA CONTACTOS
+    Route::get('/contactos', [App\Http\Controllers\ContactosController::class, 'index']);
 });
 
