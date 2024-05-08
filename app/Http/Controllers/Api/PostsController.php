@@ -181,6 +181,7 @@ class PostsController extends Controller
         if ($contacto->save()) {
 
             // verificacion de telefono o celular
+
             if(strlen($contacto->telefono) == 8){
                 $twiliosid = env('TWILIO_SID');
                 $twiliotoken = env('TWILIO_TOKEN');
